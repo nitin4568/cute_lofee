@@ -1,0 +1,68 @@
+name: lofeee
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+
+  # Networking
+  http: ^1.6.0
+
+  # State management
+  get: ^4.7.3
+
+  # Music player
+  audioplayers: ^6.6.0
+
+  # API keys
+  flutter_dotenv: ^6.0.0
+
+  # UI / Utils
+  cached_network_image: ^3.4.1
+  flutter_screenutil: ^5.9.3
+  lottie: ^3.1.0   # 🔥 FIX (version add kiya)
+  shimmer: ^3.0.0
+
+  # Storage / Network
+  get_storage: ^2.1.1
+  connectivity_plus: ^7.0.0
+
+  # Audio
+  just_audio: ^0.10.5
+  audio_service: ^0.18.18
+  audio_session: ^0.2.3
+
+  # Local songs
+  on_audio_query: ^2.9.0
+  permission_handler: ^12.0.1
+
+  # YouTube
+  youtube_explode_dart: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+
+# ✅ IMPORTANT: flutter_icons should be OUTSIDE flutter
+flutter_icons:
+  android: true
+  ios: false
+  image_path: "assets/Gemini_Generated_Image_du0uy3du0uy3du0u.png"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/Error 404.json
+    - assets/Happy Spaceman.json
+    - assets/Gemini_Generated_Image_du0uy3du0uy3du0u.png   # 🔥 ADD THIS
