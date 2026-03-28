@@ -1,0 +1,13 @@
+[33m6cb8ec1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: rebase (abort): returning to refs/heads/main
+[33mb63ab07[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{1}: rebase (start): checkout origin/main
+[33m6cb8ec1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{2}: commit (amend): fix all things and all the code finshi
+[33m98a633a[m HEAD@{3}: commit (amend): fix all things and all the code finshi
+[33mb63ab07[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{4}: pull --rebase origin main (finish): returning to refs/heads/main
+[33mb63ab07[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{5}: pull --rebase origin main (pick): first commit all is well
+[33me62958f[m HEAD@{6}: pull --rebase origin main (start): checkout e62958f2e6c78ace273fbdeacc462c9938fdb40d
+[33mc14fb26[m HEAD@{7}: commit (amend): first commit all is well
+[33m767643f[m HEAD@{8}: commit (amend): first commit all is well
+[33m4675ab2[m HEAD@{9}: commit (amend): first commit all is well
+[33me62958f[m HEAD@{10}: Branch: renamed refs/heads/main to refs/heads/main
+[33me62958f[m HEAD@{12}: Branch: renamed refs/heads/master to refs/heads/main
+[33me62958f[m HEAD@{14}: commit (initial): first commit
