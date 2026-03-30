@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../view_models/controller/music_controller.dart';
 import '../../models/song/song_model.dart';
+import '../../view_models/controller/playlist_controller.dart';
 
 class TrackScreen extends StatefulWidget {
   final SongModel song;
@@ -21,8 +22,10 @@ class _TrackScreenState extends State<TrackScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     final localId = int.tryParse(widget.song.id);
     final isLocal = localId != null;
+    final theme = Theme.of(context);
 
     return Scaffold(
       body: Stack(
@@ -32,9 +35,9 @@ class _TrackScreenState extends State<TrackScreen> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.pink.shade200,
-                  Colors.pink.shade50,
-                  Colors.white,
+                  theme.colorScheme.primary.withOpacity(0.4),
+                  theme.colorScheme.primary.withOpacity(0.1),
+                  theme.scaffoldBackgroundColor,
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -58,21 +61,23 @@ class _TrackScreenState extends State<TrackScreen> {
                         onPressed: () => Get.back(),
                       ),
 
-                      Obx(() {
-                        final isLiked = controller.isLiked(widget.song);
-                        return IconButton(
-                          icon: Icon(
-                            isLiked ? Icons.favorite : Icons.favorite_border,
-                            color: isLiked ? Colors.pink : Colors.grey,
-                            size: 24.sp,
+                      Row(
+                        children: [
+
+                          // ❤️ LIKE
+
+
+                          // ➕ ADD TO PLAYLIST
+                          IconButton(
+                            icon: Icon(Icons.playlist_add, size: 24.sp),
+                            onPressed: () {
+                              showAddToPlaylistDialog(widget.song);
+                            },
                           ),
-                          onPressed: () {
-                            controller.toggleLike(widget.song);
-                          },
-                        );
-                      }),
+                        ],
+                      )
                     ],
-                  ),
+                  )
                 ),
 
                 /// 🔥 SONG IMAGE + INFO (REACTIVE)
@@ -100,9 +105,12 @@ class _TrackScreenState extends State<TrackScreen> {
                                     type: audio.ArtworkType.AUDIO,
                                     artworkFit: BoxFit.cover,
                                     nullArtworkWidget: Container(
-                                      color: Colors.white,
-                                      child:
-                                          Icon(Icons.music_note, size: 100.sp),
+                                      color: Theme.of(context).cardColor,
+                                      child: Icon(
+                                        Icons.music_note,
+                                        size: 100.sp,
+                                        color: Theme.of(context).colorScheme.primary,
+                                      ),
                                     ),
                                   )
                                 : CachedNetworkImage(
@@ -110,7 +118,7 @@ class _TrackScreenState extends State<TrackScreen> {
                                         song.image.isNotEmpty ? song.image : "",
                                     fit: BoxFit.cover,
                                     placeholder: (_, __) =>
-                                        Container(color: Colors.grey.shade200),
+                                        Container(color: Theme.of(context).dividerColor),
                                     errorWidget: (_, __, ___) =>
                                         const Icon(Icons.music_note),
                                   ),
@@ -133,10 +141,7 @@ class _TrackScreenState extends State<TrackScreen> {
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: true,
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
                               ),
 
@@ -151,10 +156,7 @@ class _TrackScreenState extends State<TrackScreen> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: false,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13.sp,
-                                  ),
+                            style: Theme.of(context).textTheme.bodySmall,
                                 ),
                               ),
                             ],
@@ -183,7 +185,7 @@ class _TrackScreenState extends State<TrackScreen> {
                           min: 0,
                           max: total > 0 ? total : 1,
                           value: current.clamp(0, total == 0 ? 1 : total),
-                          activeColor: Colors.pink,
+                          activeColor: Theme.of(context).colorScheme.primary,
                           onChanged: controller.seek,
                         ),
                         Row(
@@ -212,15 +214,16 @@ class _TrackScreenState extends State<TrackScreen> {
                 Obx(() => Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+
                         IconButton(
                           icon: Icon(Icons.replay_10, size: 30.sp),
                           onPressed: controller.seekBackward,
                         ),
                         SizedBox(width: 10.w),
                         Container(
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.pink,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                           padding: EdgeInsets.all(12.w),
                           child: IconButton(
@@ -228,7 +231,7 @@ class _TrackScreenState extends State<TrackScreen> {
                               controller.isPlaying.value
                                   ? Icons.pause
                                   : Icons.play_arrow,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onPrimary,
                             ),
                             iconSize: 30.sp,
                             onPressed: controller.togglePlayPause,
@@ -239,14 +242,164 @@ class _TrackScreenState extends State<TrackScreen> {
                           icon: Icon(Icons.forward_10, size: 30.sp),
                           onPressed: controller.seekForward,
                         ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.repeat_one,
+                            color: controller.isRepeatMode.value
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.grey,
+                          ),
+                          onPressed: () {
+                            controller.isRepeatMode.toggle();
+                          },
+                        ),
+
+                        SizedBox(width: 20),
+
+                        // 🔀 NORMAL FLOW (SUFFIX ALL)
+                        IconButton(
+                          icon: Icon(
+                            Icons.shuffle,
+                            color: !controller.isRepeatMode.value
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.grey,
+                          ),
+                          onPressed: () {
+                            controller.isRepeatMode.value = false;
+                          },
+                        ),
                       ],
                     )),
+
 
                 SizedBox(height: 30.h),
               ],
             ),
           ),
         ],
+      ),
+    );
+
+  }
+  void showAddToPlaylistDialog(SongModel song) {
+    final playlistController = Get.find<PlaylistController>();
+
+    TextEditingController nameController = TextEditingController();
+
+    Get.bottomSheet(
+      Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+
+        child: Obx(() {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              // ➕ CREATE PLAYLIST
+              ListTile(
+                leading: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.add,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                title: Text(
+                  "Create New Playlist",
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Get.defaultDialog(
+                    title: "Create Playlist",
+                    radius: 16,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+
+                    content: Column(
+                      children: [
+                        TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            hintText: "Enter playlist name",
+                            prefixIcon: Icon(Icons.queue_music),
+                            filled: true,
+                            fillColor: Theme.of(context).cardColor,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    ),
+
+                    textConfirm: "Create",
+                    textCancel: "Cancel",
+
+                    confirmTextColor: Colors.white,
+
+                    onConfirm: () {
+                      if (nameController.text.trim().isEmpty) return;
+
+                      playlistController
+                          .createPlaylist(nameController.text.trim());
+
+                      playlistController.addSong(
+                        playlistController.playlists.length - 1,
+                        song,
+                      );
+
+                      nameController.clear();
+
+                      Get.back();
+                      Get.back();
+                    },
+                  );
+                },
+              ),
+
+              Divider(color: Theme.of(context).dividerColor),
+
+              // 📂 EXISTING PLAYLIST
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: playlistController.playlists.length,
+                  itemBuilder: (_, index) {
+                    final playlist = playlistController.playlists[index];
+
+                    return ListTile(
+                      leading: Icon(Icons.queue_music),
+                      title: Text(playlist.name),
+
+                      onTap: () {
+                        playlistController.addSong(index, song);
+                        Get.back();
+
+                        Get.snackbar(
+                          "Added",
+                          "Song added to ${playlist.name}",
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          colorText: Theme.of(context).colorScheme.onPrimary,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

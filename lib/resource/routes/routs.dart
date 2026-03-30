@@ -5,5 +5,5 @@ class AppRouteNames {
   static const search = "/search";
   static const trackscreen = "/track";
   static const library = "/library";
-  static const likes = "/likes";
+
 }

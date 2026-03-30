@@ -42,7 +42,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                  color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: const [
                   BoxShadow(color: Colors.black12, blurRadius: 6)
@@ -54,9 +54,12 @@ class _SearchWidgetState extends State<SearchWidget> {
                   controller.onSearchChanged(value);
                 },
                 onSubmitted: controller.searchSongs,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: "Search songs...",
-                  prefixIcon: Icon(Icons.search, color: Colors.pink),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(vertical: 15),
                 ),
@@ -86,7 +89,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       margin: const EdgeInsets.symmetric(horizontal: 6),
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: Colors.pink.shade100,
+                          color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Center(child: Text(item)),
@@ -106,7 +109,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               if (controller.isSearching.value) {
                 return ListView.builder(
                   itemCount: 6,
-                  itemBuilder: (_, __) => _shimmerTile(),
+                  itemBuilder: (context, _) => _shimmerTile(context),
                 );
               }
 
@@ -130,11 +133,11 @@ class _SearchWidgetState extends State<SearchWidget> {
 
 
                   if (index >= songs.length) {
-                    return const Padding(
-                      padding: EdgeInsets.all(16),
+                    return Padding(
+                      padding: const EdgeInsets.all(16),
                       child: Center(
                         child: CircularProgressIndicator(
-                          color: Colors.pink,
+                          color: Theme.of(context).colorScheme.primary,
                           strokeWidth: 3,
                         ),
                       ),
@@ -148,7 +151,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                         horizontal: 12, vertical: 6),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.pink.shade50,
+                        color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: ListTile(
@@ -176,7 +179,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                         song.name,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: Colors.pink.shade700,
+                            color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
 
@@ -184,21 +187,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       subtitle: Text(song.artist),
 
 
-                      trailing: Obx(() {
-                        final isLiked = controller.isLiked(song);
 
-                        return IconButton(
-                          icon: Icon(
-                            isLiked
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: isLiked ? Colors.pink : Colors.grey,
-                          ),
-                          onPressed: () {
-                            controller.toggleLike(song);
-                          },
-                        );
-                      }),
                     ),
                   );
                 },
@@ -210,10 +199,10 @@ class _SearchWidgetState extends State<SearchWidget> {
     );
   }
 
-  Widget _shimmerTile() {
+  Widget _shimmerTile(BuildContext context){
     return Shimmer.fromColors(
-      baseColor: Colors.pink.shade100,
-      highlightColor: Colors.pink.shade50,
+        baseColor: Theme.of(context).dividerColor,
+        highlightColor: Theme.of(context).hoverColor,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         padding: const EdgeInsets.all(8),

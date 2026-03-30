@@ -106,9 +106,9 @@ class _LibraryWidgetState extends State<LibraryWidget>
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: CircularProgressIndicator(
-          color: Colors.pink,
+          color: Theme.of(context).colorScheme.primary,
           strokeWidth: 3,
         ),
       );
@@ -133,7 +133,7 @@ class _LibraryWidgetState extends State<LibraryWidget>
             child: Container(
               height: 45.h,
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: TextField(
@@ -142,9 +142,12 @@ class _LibraryWidgetState extends State<LibraryWidget>
                     searchQuery = value.toLowerCase();
                   });
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: "Search songs...",
-                  prefixIcon: Icon(Icons.search),
+                 prefixIcon: Icon(
+                  Icons.search,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                   border: InputBorder.none,
                 ),
               ),
@@ -176,7 +179,7 @@ class _LibraryWidgetState extends State<LibraryWidget>
                       child: Container(
                         padding: EdgeInsets.all(10.w),
                         decoration: BoxDecoration(
-                          color: Colors.pink.shade50,
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(14.r),
                         ),
                         child: Row(
@@ -197,19 +200,13 @@ class _LibraryWidgetState extends State<LibraryWidget>
                                     song.title,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: Theme.of(context).textTheme.titleMedium,
                                   ),
                                   Text(
                                     song.artist ?? "Unknown",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12.sp,
-                                    ),
+                                    style: Theme.of(context).textTheme.bodySmall,
                                   ),
                                 ],
                               ),
@@ -294,8 +291,11 @@ class _ArtworkWidgetState extends State<ArtworkWidget>
           : Container(
         height: 50,
         width: 50,
-        color: Colors.grey.shade300,
-        child: const Icon(Icons.music_note),
+        color: Theme.of(context).dividerColor,
+        child: Icon(
+          Icons.music_note,
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }

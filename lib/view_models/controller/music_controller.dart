@@ -7,18 +7,25 @@ import '../../audio_handler.dart';
 import '../../data/repository/music_repo/music_repository.dart';
 import '../../resource/network.dart';
 import '../../resource/snackbar.dart';
+import 'home_controller/home_controller.dart';
 import 'home_controller/offline_music_controller.dart';
 
+enum PlayMode { random, playlist, offline }
 class MusicController extends GetxController {
+
+  PlayMode currentMode = PlayMode.random;
 
   final MusicRepository repository = MusicRepository();
   final box = GetStorage();
 
   late MyAudioHandler audioHandler;
 
+  List<SongModel> currentPlaylist = [];
+  int currentIndex = 0;
+
   var songs = <SongModel>[].obs;
   Rxn<SongModel> currentSong = Rxn<SongModel>();
-  var likedSongs = <SongModel>[].obs;
+
   var recentSearches = <String>[].obs;
 
   var isPlaying = false.obs;
@@ -26,6 +33,8 @@ class MusicController extends GetxController {
 
   var currentPosition = Duration.zero.obs;
   var totalDuration = Duration.zero.obs;
+
+  var isRepeatMode = false.obs; // 🔁 repeat single song
   String currentMood = "bollywood"; // default
 
   int currentPage = 1;
@@ -35,7 +44,7 @@ class MusicController extends GetxController {
 
   Timer? _debounce;
 
-  bool isOfflineMode = false;
+  // bool isOfflineMode = false;
   Set<String> playedSongIds = {};
 
   @override
@@ -61,18 +70,55 @@ class MusicController extends GetxController {
     });
   }
 
+  Future<void> playPlaylist(List<SongModel> songs, int startIndex) async {
+    if (songs.isEmpty) return;
+
+    currentMode = PlayMode.playlist;
+    currentPlaylist = songs;
+    currentIndex = startIndex;
+
+    await playSong(
+      currentPlaylist[currentIndex],
+      fromPlaylist: true,
+    );
+  }
   // ================= AUTO NEXT =================
 
   Future<void> handleSongComplete() async {
 
-    if (isOfflineMode) {
+    // 🔁 REPEAT MODE (BEST FIX)
+    if (isRepeatMode.value) {
+      await audioHandler.seek(Duration.zero);
+      await audioHandler.play();
+      return;
+    }
 
+    // 🎯 PLAYLIST MODE
+    if (currentMode == PlayMode.playlist &&
+        currentPlaylist.isNotEmpty) {
+
+      currentIndex++;
+
+      if (currentIndex < currentPlaylist.length) {
+        await playSong(
+          currentPlaylist[currentIndex],
+          fromPlaylist: true,
+        );
+        return;
+      } else {
+        currentMode = PlayMode.random;
+        return;
+      }
+    }
+
+    // 🎯 OFFLINE MODE
+    if (currentMode == PlayMode.offline) {
       final offlineController = Get.find<OfflineMusicController>();
       offlineController.playNextSong();
       return;
     }
 
-
+    // 🎯 RANDOM MODE
     await playNextOnlineSong();
   }
 
@@ -97,6 +143,7 @@ class MusicController extends GetxController {
 
       if (songs.isEmpty) return;
 
+      // ❌ remove played
       final filtered = songs
           .where((s) =>
       !playedSongIds.contains(s.id) &&
@@ -195,14 +242,22 @@ class MusicController extends GetxController {
       await audioHandler.play();
     }
   }
-  Future<void> playSong(SongModel song) async {
+  Future<void> playSong(SongModel song, {bool fromPlaylist = false}) async {
     try {
-      if (currentSong.value?.id == song.id) return;
+      if (currentSong.value?.id == song.id && !isRepeatMode.value) return;
 
-      isOfflineMode = false;
+      if (!fromPlaylist) {
+        currentMode = PlayMode.random;
+      }
+
       currentSong.value = song;
-
       playedSongIds.add(song.id);
+
+
+      try {
+        final homeController = Get.find<HomeController>();
+        homeController.addRecent(song);
+      } catch (_) {}
 
       // 🔥 AUTO MOOD DETECTION
       final name = song.name.toLowerCase();
@@ -265,46 +320,19 @@ class MusicController extends GetxController {
   // ================= STORAGE =================
 
   void loadFromStorage() {
-    final liked = box.read('likedSongs') ?? [];
-    likedSongs.value =
-        (liked as List).map((e) => SongModel.fromJson(e)).toList();
 
     final searches = box.read('recentSearches') ?? [];
     recentSearches.value = List<String>.from(searches);
   }
 
-  void saveLiked() {
-    box.write(
-      'likedSongs',
-      likedSongs.map((e) => e.toJson()).toList(),
-    );
-  }
+
 
   void saveSearches() {
     box.write('recentSearches', recentSearches);
   }
 
-  void toggleLike(SongModel song) {
-    final index = likedSongs.indexWhere(
-          (s) => s.name == song.name && s.artist == song.artist,
-    );
 
-    if (index != -1) {
-      likedSongs.removeAt(index);
-      AppSnackbar.info("Removed from likes");
-    } else {
-      likedSongs.add(song);
-      AppSnackbar.success("Added to liked songs ❤️");
-    }
 
-    saveLiked();
-  }
-
-  bool isLiked(SongModel song) {
-    return likedSongs.any(
-          (s) => s.name == song.name && s.artist == song.artist,
-    );
-  }
 
   void addRecentSearch(String query) {
     recentSearches.remove(query);

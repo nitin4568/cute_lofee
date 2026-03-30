@@ -16,32 +16,33 @@ class CustomBottomNavbar extends StatelessWidget {
 
       return Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.black12,
+              color: Theme.of(context).shadowColor.withOpacity(0.2),
               blurRadius: 8.r,
             ),
           ],
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).cardColor,
 
           currentIndex: selectedIndex,
           onTap: controller.changeIndex,
 
-          selectedItemColor: Colors.pink,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          unselectedItemColor:
+          Theme.of(context).unselectedWidgetColor,
 
           selectedFontSize: 12.sp,
           unselectedFontSize: 11.sp,
 
           items: [
-            _buildItem(Icons.home, "Home", 0, selectedIndex),
-            _buildItem(Icons.search, "Search", 1, selectedIndex),
-            _buildItem(Icons.library_music, "Library", 2, selectedIndex),
-            _buildItem(Icons.favorite, "Likes", 3, selectedIndex),
+            _buildItem(context, Icons.home, "Home", 0, selectedIndex),
+            _buildItem(context, Icons.search, "Search", 1, selectedIndex),
+            _buildItem(context, Icons.library_music, "Library", 2, selectedIndex),
+            _buildItem(context, Icons.playlist_add, "Playlist", 3, selectedIndex),
           ],
         ),
       );
@@ -49,8 +50,12 @@ class CustomBottomNavbar extends StatelessWidget {
   }
 
   BottomNavigationBarItem _buildItem(
-      IconData icon, String label, int index, int selectedIndex) {
-
+      BuildContext context,
+      IconData icon,
+      String label,
+      int index,
+      int selectedIndex,
+      ) {
     final isSelected = selectedIndex == index;
 
     return BottomNavigationBarItem(
@@ -60,13 +65,16 @@ class CustomBottomNavbar extends StatelessWidget {
         padding: EdgeInsets.all(4.w),
         decoration: BoxDecoration(
           color: isSelected
-              ? Colors.pink.withOpacity(0.1)
+              ? Theme.of(context)
+              .colorScheme
+              .primary
+              .withOpacity(0.15)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: Icon(
           icon,
-          size: isSelected ? 26.sp : 22.sp,
+          size: isSelected ? 27.sp : 25.sp,
         ),
       ),
       label: label,

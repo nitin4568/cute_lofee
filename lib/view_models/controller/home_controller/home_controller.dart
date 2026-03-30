@@ -19,6 +19,7 @@ class HomeController extends GetxController {
   var isRefreshing = false.obs;
 
   RxInt selectedIndex = 0.obs;
+  RxBool isConnected = true.obs;
 
   void changeIndex(int index) {
     selectedIndex.value = index;
@@ -37,9 +38,33 @@ class HomeController extends GetxController {
     super.onInit();
     loadRecent();
     fetchHomeData();
+
+    /// 🔥 IMPORTANT: repeat internet check
+    _startInternetListener();
   }
 
-  /// 🔥 RANDOM QUERY GENERATOR (FIXED)
+  /// 🔥 INTERNET LISTENER (FIX)
+  void _startInternetListener() {
+    ever(isConnected, (_) {});
+
+    Future.doWhile(() async {
+      bool status = await NetworkUtils.isConnected();
+
+      if (isConnected.value != status) {
+        isConnected.value = status;
+
+        /// 🔥 AUTO RELOAD WHEN INTERNET BACK
+        if (status) {
+          fetchHomeData();
+        }
+      }
+
+      await Future.delayed(const Duration(seconds: 3));
+      return true;
+    });
+  }
+
+  /// 🔥 RANDOM QUERY
   String randomQuery(String base) {
     List<String> extras = [
       "2024",
@@ -60,20 +85,24 @@ class HomeController extends GetxController {
   Future<void> fetchHomeData({bool isRefresh = false}) async {
     try {
 
+      /// 🔥 INTERNET CHECK
+      isConnected.value = await NetworkUtils.isConnected();
+
+      if (!isConnected.value) {
+        if (isRefresh) {
+          AppSnackbar.error("No Internet ❌");
+        }
+        isLoading.value = false;
+        isRefreshing.value = false;
+        return;
+      }
+
       if (isRefresh) {
         isRefreshing.value = true;
       } else {
         isLoading.value = true;
       }
 
-      if (!await NetworkUtils.isConnected()) {
-        AppSnackbar.error("No Internet ❌");
-        isLoading.value = false;
-        isRefreshing.value = false;
-        return;
-      }
-
-      /// 🔥 CLEAR OLD DATA
       trendingSongs.clear();
       romanticSongs.clear();
       lofiSongs.clear();
@@ -88,7 +117,6 @@ class HomeController extends GetxController {
         musicRepo.searchSongs(randomQuery("new songs")),
       ]);
 
-      /// 🔥 UNIQUE FILTER
       trendingSongs.assignAll(_unique(results[0]));
       romanticSongs.assignAll(_unique(results[1]));
       lofiSongs.assignAll(_unique(results[2]));
@@ -139,7 +167,7 @@ class HomeController extends GetxController {
     }
   }
 
-  /// 🔥 FINAL SONG CLICK (MOST IMPORTANT)
+  /// 🔥 SONG CLICK
   void onSongClick(SongModel song) async {
 
     if (!await NetworkUtils.isConnected()) {
@@ -151,9 +179,7 @@ class HomeController extends GetxController {
 
     final musicController = Get.find<MusicController>();
 
-
     await musicController.playSong(song);
-
 
     Get.to(
           () => TrackScreen(song: song),

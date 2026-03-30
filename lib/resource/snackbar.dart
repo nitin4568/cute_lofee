@@ -11,32 +11,38 @@ class AppSnackbar {
     required IconData icon,
     int duration = 2,
   }) {
+
+    final context = Get.context!;
+    final theme = Theme.of(context);
+
     Get.snackbar(
       title,
       message,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: bgColor,
-      colorText: Colors.white,
+      colorText: theme.colorScheme.onPrimary,
       margin: EdgeInsets.all(12.w),
       borderRadius: 12.r,
       duration: Duration(seconds: duration),
 
-      icon: Icon(icon, color: Colors.white, size: 24.sp),
+      icon: Icon(
+        icon,
+        color: theme.colorScheme.onPrimary,
+        size: 24.sp,
+      ),
 
       titleText: Text(
         title,
-        style: TextStyle(
-          fontSize: 14.sp,
+        style: theme.textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.bold,
-          color: Colors.white,
+          color: theme.colorScheme.onPrimary,
         ),
       ),
 
       messageText: Text(
         message,
-        style: TextStyle(
-          fontSize: 13.sp,
-          color: Colors.white,
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onPrimary,
         ),
       ),
 
@@ -46,30 +52,39 @@ class AppSnackbar {
     );
   }
 
+  /// ✅ SUCCESS
   static void success(String message) {
+    final theme = Theme.of(Get.context!);
+
     _show(
       title: "Success",
       message: message,
-      bgColor: Colors.green,
+      bgColor: theme.colorScheme.primary,
       icon: Icons.check_circle,
     );
   }
 
+  /// ❌ ERROR
   static void error(String message) {
+    final theme = Theme.of(Get.context!);
+
     _show(
       title: "Error",
       message: message,
-      bgColor: Colors.red,
+      bgColor: theme.colorScheme.error,
       icon: Icons.error,
       duration: 3,
     );
   }
 
+  /// ℹ️ INFO
   static void info(String message) {
+    final theme = Theme.of(Get.context!);
+
     _show(
       title: "Info",
       message: message,
-      bgColor: Colors.blue,
+      bgColor: theme.colorScheme.secondary,
       icon: Icons.info,
     );
   }

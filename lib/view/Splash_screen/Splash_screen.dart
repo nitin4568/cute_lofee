@@ -28,15 +28,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: Container(
 
-        decoration: const BoxDecoration(
+        /// 🎨 THEME BASED GRADIENT BACKGROUND
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFFFFF1F5), // light pink
-              Colors.white,
-              Color(0xFFFFC1CC), // soft pink
+              theme.colorScheme.primary.withOpacity(0.3),
+              theme.scaffoldBackgroundColor,
+              theme.colorScheme.primary.withOpacity(0.15),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -47,34 +50,34 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+
+              /// 🎬 LOTTIE ANIMATION
               Lottie.asset(
                 'assets/Happy Spaceman.json',
                 width: 200,
                 height: 200,
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
-              // 🔥 Music App Name
-              const Text(
+              /// 🎧 APP NAME
+              Text(
                 "Lofeee 🎧",
-                style: TextStyle(
-                  fontSize: 28,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.pink,
+                  color: theme.colorScheme.primary,
                   letterSpacing: 1,
                 ),
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
-
-              const Text(
+              /// ✨ TAGLINE
+              Text(
                 "Feel the Music. Live the Vibe with Nitin.",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 14,
-                ),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium,
               ),
             ],
           ),

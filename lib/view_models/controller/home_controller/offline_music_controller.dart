@@ -12,7 +12,7 @@ class OfflineMusicController extends GetxController {
   final box = GetStorage();
   late MyAudioHandler audioHandler;
 
-  var likedSongs = <SongModel>[].obs;
+
   var recentSearches = <String>[].obs;
 
 
@@ -26,7 +26,7 @@ class OfflineMusicController extends GetxController {
 
 
 
-    loadFromStorage();
+
   }
 
   // ================= PLAY OFFLINE =================
@@ -38,8 +38,8 @@ class OfflineMusicController extends GetxController {
       currentIndex = offlineSongs.indexWhere((s) => s.id == song.id);
       if (currentIndex == -1) currentIndex = 0;
 
-
-      musicController.isOfflineMode = true;
+      // 🔥 FIX
+      musicController.currentMode = PlayMode.offline;
 
       musicController.currentSong.value = song;
 
@@ -66,14 +66,16 @@ class OfflineMusicController extends GetxController {
 
 
   void playNextSong() {
-    if (!musicController.isOfflineMode) return;
+
+    // 🔥 FIX
+    if (musicController.currentMode != PlayMode.offline) return;
 
     if (offlineSongs.isEmpty) return;
 
     currentIndex++;
 
     if (currentIndex >= offlineSongs.length) {
-      currentIndex = 0; // 🔁 infinite loop
+      currentIndex = 0; // 🔁 loop
     }
 
     _playCurrent();
@@ -81,21 +83,7 @@ class OfflineMusicController extends GetxController {
 
   // ================= STORAGE =================
 
-  void loadFromStorage() {
-    final liked = box.read('likedSongs') ?? [];
-    likedSongs.value =
-        (liked as List).map((e) => SongModel.fromJson(e)).toList();
 
-    final searches = box.read('recentSearches') ?? [];
-    recentSearches.value = List<String>.from(searches);
-  }
-
-  void saveLiked() {
-    box.write(
-      'likedSongs',
-      likedSongs.map((e) => e.toJson()).toList(),
-    );
-  }
 
   void saveSearches() {
     box.write('recentSearches', recentSearches);
@@ -103,27 +91,7 @@ class OfflineMusicController extends GetxController {
 
   // ================= LIKE =================
 
-  void toggleLike(SongModel song) {
-    final index = likedSongs.indexWhere(
-          (s) => s.name == song.name && s.artist == song.artist,
-    );
 
-    if (index != -1) {
-      likedSongs.removeAt(index);
-      AppSnackbar.info("Removed from likes");
-    } else {
-      likedSongs.add(song);
-      AppSnackbar.success("Added to liked songs ❤️");
-    }
-
-    saveLiked();
-  }
-
-  bool isLiked(SongModel song) {
-    return likedSongs.any(
-          (s) => s.name == song.name && s.artist == song.artist,
-    );
-  }
 
   void addRecentSearch(String query) {
     recentSearches.remove(query);

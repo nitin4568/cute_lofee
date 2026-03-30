@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
 import 'package:lofeee/resource/components/library_widget.dart';
-import 'package:lofeee/resource/components/like_widget.dart';
 import 'package:lofeee/resource/routes/routs.dart';
 import 'package:lofeee/resource/widgets/search_widgets.dart';
 import 'package:lofeee/view/Splash_screen/Splash_screen.dart';
 import 'package:lofeee/view/home_page/home_Page.dart';
 import 'package:lofeee/view/track_screen/track_screen.dart';
+
+import '../../view/home_page/settings_page.dart';
 
 class AppRoutes {
   static List<GetPage> appRoutes() => [
@@ -38,9 +39,5 @@ class AppRoutes {
       page: () => LibraryWidget(),
     ),
 
-    GetPage(
-      name: AppRouteNames.likes,
-      page: () => LikesWidget(),
-    ),
   ];
 }

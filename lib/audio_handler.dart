@@ -8,22 +8,27 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
 
   MyAudioHandler() {
 
-
+    /// 🔥 PLAYBACK STATE UPDATE (Notification UI FIXED)
     _player.playbackEventStream.listen((event) {
       playbackState.add(
         playbackState.value.copyWith(
           controls: [
-            MediaControl.skipToPrevious,
-            _player.playing ? MediaControl.pause : MediaControl.play,
-            MediaControl.stop,
-            MediaControl.skipToNext,
+            MediaControl.rewind, // ⏪ LEFT
+            _player.playing
+                ? MediaControl.pause
+                : MediaControl.play, // ▶️ CENTER
+            MediaControl.fastForward, // ⏩ RIGHT
           ],
+
+          /// 👇 Only these 3 buttons will show
+          androidCompactActionIndices: const [0, 1, 2],
+
           systemActions: const {
             MediaAction.seek,
             MediaAction.seekForward,
             MediaAction.seekBackward,
           },
-          androidCompactActionIndices: const [0, 1, 2],
+
           processingState: _mapState(_player.processingState),
           playing: _player.playing,
           updatePosition: _player.position,
@@ -33,7 +38,7 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
       );
     });
 
-
+    /// 🔥 SONG COMPLETE LISTENER
     _player.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed) {
         onSongComplete?.call();
@@ -41,6 +46,7 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
     });
   }
 
+  /// 🔥 PLAY SONG
   Future<void> playMedia(
       String url, String title, String artist, String image) async {
 
@@ -61,9 +67,11 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
     await _player.play();
   }
 
+  /// 🔥 STREAMS
   Stream<Duration> get positionStream => _player.positionStream;
   Stream<Duration?> get durationStream => _player.durationStream;
 
+  /// 🔥 BASIC CONTROLS
   @override
   Future<void> play() => _player.play();
 
@@ -73,6 +81,37 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
   @override
   Future<void> seek(Duration position) => _player.seek(position);
 
+  /// 🔥 ⏩ FORWARD 10 SEC
+  @override
+  Future<void> fastForward() async {
+    final newPos = _player.position + const Duration(seconds: 10);
+
+    if (newPos < (_player.duration ?? Duration.zero)) {
+      await _player.seek(newPos);
+    } else {
+      await _player.seek(_player.duration ?? Duration.zero);
+    }
+  }
+
+  /// 🔥 ⏪ BACKWARD 10 SEC
+  @override
+  Future<void> rewind() async {
+    final newPos = _player.position - const Duration(seconds: 10);
+
+    if (newPos > Duration.zero) {
+      await _player.seek(newPos);
+    } else {
+      await _player.seek(Duration.zero);
+    }
+  }
+
+  /// 🔥 OPTIONAL: STOP (if needed)
+  @override
+  Future<void> stop() async {
+    await _player.stop();
+  }
+
+  /// 🔥 STATE MAPPER
   AudioProcessingState _mapState(ProcessingState state) {
     switch (state) {
       case ProcessingState.idle:
@@ -86,5 +125,12 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
       case ProcessingState.completed:
         return AudioProcessingState.completed;
     }
+  }
+
+  /// 🔥 DISPOSE (IMPORTANT)
+  @override
+  Future<void> onTaskRemoved() async {
+    await _player.dispose();
+    return super.onTaskRemoved();
   }
 }

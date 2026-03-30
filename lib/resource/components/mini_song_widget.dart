@@ -33,7 +33,7 @@ class MiniPlayer extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
           padding: EdgeInsets.all(10.w),
           decoration: BoxDecoration(
-            color: Colors.pink.shade100,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(15.r),
           ),
           child: Column(
@@ -50,8 +50,8 @@ class MiniPlayer extends StatelessWidget {
 
                 return LinearProgressIndicator(
                   value: progress,
-                  backgroundColor: Colors.pink.shade50,
-                  color: Colors.pink,
+                  backgroundColor: Theme.of(context).dividerColor,
+                  color: Theme.of(context).colorScheme.primary,
                 );
               }),
 
@@ -73,8 +73,11 @@ class MiniPlayer extends StatelessWidget {
                         nullArtworkWidget: Container(
                           height: 50.h,
                           width: 50.w,
-                          color: Colors.white,
-                          child: const Icon(Icons.music_note),
+                            color: Theme.of(context).cardColor,
+                            child: Icon(
+                              Icons.music_note,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                         ),
                       )
                           : CachedNetworkImage(
@@ -83,7 +86,7 @@ class MiniPlayer extends StatelessWidget {
                         width: 50.w,
                         fit: BoxFit.cover,
                         placeholder: (_, __) => Container(
-                          color: Colors.grey.shade200,
+                          color: Theme.of(context).dividerColor,
                         ),
                         errorWidget: (_, __, ___) =>
                         const Icon(Icons.music_note),
@@ -101,19 +104,13 @@ class MiniPlayer extends StatelessWidget {
                           song.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.sp,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
                           song.artist,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 12.sp,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
@@ -124,7 +121,7 @@ class MiniPlayer extends StatelessWidget {
                       controller.isPlaying.value
                           ? Icons.pause
                           : Icons.play_arrow,
-                      color: Colors.pink,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 26.sp,
                     ),
                     onPressed: controller.togglePlayPause,

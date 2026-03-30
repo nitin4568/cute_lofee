@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:lofeee/resource/components/home_widget.dart';
 import 'package:lofeee/resource/components/library_widget.dart';
-import 'package:lofeee/resource/components/like_widget.dart';
 import 'package:lofeee/resource/components/mini_song_widget.dart';
 import 'package:lofeee/resource/components/nav_bar.dart';
 import 'package:lofeee/resource/widgets/search_widgets.dart';
+
 import 'package:lofeee/view_models/controller/home_controller/home_controller.dart';
 import 'package:lofeee/view_models/controller/music_controller.dart';
+
+import '../../resource/widgets/playlist_details.dart';
+import '../../resource/widgets/playlist_widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -20,34 +23,31 @@ class HomeScreen extends StatelessWidget {
     HomeWidget(),
     SearchWidget(),
     LibraryWidget(),
-    LikesWidget(),
+    PlaylistScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
-      body: Stack(
+      /// 🔥 MAIN BODY
+      body: Obx(() {
+        return screens[controller.selectedIndex.value];
+      }),
+
+      /// 🔥 MINI PLAYER + NAV BAR (IMPORTANT)
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
 
-          Obx(() {
-            return Padding(
-              padding: EdgeInsets.only(bottom: 1.h), // 🔥 space for mini player
-              child: screens[controller.selectedIndex.value],
-            );
-          }),
+          /// 🎧 MINI PLAYER (GLOBAL FIX)
+          MiniPlayer(),
 
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: MiniPlayer(),
-          ),
+          /// 🔻 NAV BAR
+          CustomBottomNavbar(),
         ],
       ),
-
-      bottomNavigationBar: CustomBottomNavbar(),
     );
   }
 }

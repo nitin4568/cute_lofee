@@ -9,12 +9,18 @@ import 'package:lofeee/resource/routes/app_routes.dart';
 import 'package:lofeee/resource/routes/routs.dart';
 import 'package:lofeee/data/binding/app_binding.dart';
 import 'package:lofeee/audio_handler.dart';
+import 'package:lofeee/resource/theam/theam.dart';
+import 'package:lofeee/resource/theam/theam_controller.dart'; // 🔥 ADD
 
 late MyAudioHandler audioHandler;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await GetStorage.init();
+
+  /// 🔥 THEME SERVICE INIT (MOST IMPORTANT)
+  Get.put(ThemeService(), permanent: true);
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -27,7 +33,6 @@ Future<void> main() async {
         androidNotificationChannelId: 'com.lofeee.music',
         androidNotificationChannelName: 'Music Playback',
         androidNotificationOngoing: true,
-
       ),
     );
 
@@ -35,7 +40,6 @@ Future<void> main() async {
   } catch (e) {
     print("AudioService ERROR: $e");
 
-    // 🔥 fallback to avoid crash
     Get.put<MyAudioHandler>(MyAudioHandler(), permanent: true);
   }
 
@@ -52,11 +56,19 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
+
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           initialBinding: AppBinding(),
           initialRoute: AppRouteNames.splash,
           getPages: AppRoutes.appRoutes(),
+
+          /// 🔥 THEMES
+          theme: AppThemes.pinkTheme,
+          darkTheme: AppThemes.blackWhiteTheme,
+
+          /// 🔥 SYSTEM SUPPORT
+          themeMode: ThemeMode.system,
         );
       },
     );
