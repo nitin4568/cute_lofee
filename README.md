@@ -5,3 +5,10 @@ A modern music streaming application built using **Flutter**, following **MVVM a
 ---
 
 
+lib/
+│
+├── model/        # Data models
+├── view/         # UI screens
+├── viewmodel/    # Business logic (GetX controllers)
+├── services/     # API services
+├── utils/        # Helpers & constants
