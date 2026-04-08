@@ -6,10 +6,10 @@ A modern music streaming application built using **Flutter**, following **MVVM a
 
 ## 📁 Project Structure
 
+```bash
 lib/
-
-├── model/ # Data models
-├── view/ # UI screens
-├── viewmodel/ # Business logic (GetX controllers)
-├── services/ # API services
-└── utils/ # Helpers & constants
+├── model/        # Data models
+├── view/         # UI screens
+├── viewmodel/    # Business logic (GetX controllers)
+├── services/     # API services
+└── utils/        # Helpers & constants
