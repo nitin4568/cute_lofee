@@ -4,6 +4,7 @@ A modern music streaming application built using **Flutter**, following **MVVM a
 
 ---
 
+## 📁 Project Structure
 
 lib/
 │
