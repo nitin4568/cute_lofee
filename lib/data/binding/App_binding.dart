@@ -14,13 +14,16 @@ class AppBinding extends Bindings {
       permanent: true,
     );
 
-    /// 🎨 THEME SERVICE (GLOBAL 🔥)
+    /// 🎨 THEME SERVICE
     Get.put<ThemeService>(
       ThemeService(),
       permanent: true,
     );
 
-    /// 🏠 HOME CONTROLLER
-    Get.lazyPut<HomeController>(() => HomeController());
+    /// 🏠 HOME CONTROLLER (ONLY ONCE 🔥)
+    Get.put<HomeController>(
+      HomeController(),
+      permanent: true,
+    );
   }
 }

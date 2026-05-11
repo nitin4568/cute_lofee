@@ -6,16 +6,15 @@ import 'package:lofeee/view/Splash_screen/Splash_screen.dart';
 import 'package:lofeee/view/home_page/home_Page.dart';
 import 'package:lofeee/view/track_screen/track_screen.dart';
 
-import '../../view/home_page/settings_page.dart';
-
 class AppRoutes {
   static List<GetPage> appRoutes() => [
 
     GetPage(
-        name: AppRouteNames.splash,
-        page: () => const SplashScreen(),
-        transition: Transition.downToUp,
-        transitionDuration: const Duration(milliseconds: 250)),
+      name: AppRouteNames.splash,
+      page: () => const SplashScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 250),
+    ),
 
     GetPage(
       name: AppRouteNames.home,
@@ -38,6 +37,5 @@ class AppRoutes {
       name: AppRouteNames.library,
       page: () => LibraryWidget(),
     ),
-
   ];
 }

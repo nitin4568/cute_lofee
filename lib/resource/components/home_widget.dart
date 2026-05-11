@@ -45,39 +45,36 @@ class HomeWidget extends StatelessWidget {
             onRefresh: () async {
               await controller.fetchHomeData(isRefresh: true);
             },
-
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.only(bottom: 65.h),
 
               children: [
 
-                /// 🔥 CONTINUE LISTENING
-                if (controller.recentSongs.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsets.all(12.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-
-                        Text(
-                          "Continue Listening",
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                /// 🔥 HEADER (ALWAYS VISIBLE)
+                Padding(
+                  padding: EdgeInsets.all(12.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Continue Listening",
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
                         ),
-
-                        IconButton(
-                          icon: const Icon(Icons.settings),
-                          onPressed: () {
-                            Get.to(() => SettingsScreen());
-                          },
-                        ),
-                      ],
-                    ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.settings),
+                        onPressed: () {
+                          Get.to(() => SettingsScreen());
+                        },
+                      ),
+                    ],
                   ),
+                ),
 
+                /// 🎧 RECENT SONGS
                 if (controller.recentSongs.isNotEmpty)
                   SizedBox(
                     height: 190.h,
@@ -86,8 +83,15 @@ class HomeWidget extends StatelessWidget {
                       itemCount: controller.recentSongs.length,
                       itemBuilder: (_, i) {
                         final s = controller.recentSongs[i];
-                        return _songCard(context, s); // ✅ FIXED
+                        return _songCard(context, s);
                       },
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                    child: Center(
+                      child: Text("Start playing songs 🎧"),
                     ),
                   ),
 
@@ -114,11 +118,11 @@ class HomeWidget extends StatelessWidget {
 
                 /// ✅ ONLINE DATA
                 if (controller.isConnected.value) ...[
-                  _buildSection(context, "Suggested ", controller.suggestedSongs),
-                  _buildSection(context, "Trending ", controller.trendingSongs),
-                  _buildSection(context, "Romantic ", controller.romanticSongs),
-                  _buildSection(context, "Lofi ", controller.lofiSongs),
-                  _buildSection(context, "Party ", controller.partySongs),
+                  _buildSection(context, "Suggested", controller.suggestedSongs),
+                  _buildSection(context, "Trending", controller.trendingSongs),
+                  _buildSection(context, "Romantic", controller.romanticSongs),
+                  _buildSection(context, "Lofi", controller.lofiSongs),
+                  _buildSection(context, "Party", controller.partySongs),
                 ],
               ],
             ),
@@ -211,7 +215,7 @@ class HomeWidget extends StatelessWidget {
             itemCount: songs.length,
             itemBuilder: (_, i) {
               final s = songs[i];
-              return _songCard(context, s); // ✅ CLEAN
+              return _songCard(context, s);
             },
           ),
         ),
@@ -219,7 +223,7 @@ class HomeWidget extends StatelessWidget {
     );
   }
 
-  /// 🔥 FINAL SONG CARD (CLICK FIXED HERE)
+  /// 🎵 SONG CARD
   Widget _songCard(BuildContext context, SongModel s) {
     return GestureDetector(
       onTap: () async {
@@ -228,17 +232,14 @@ class HomeWidget extends StatelessWidget {
           return;
         }
 
-        /// 🔥 MAIN FUNCTION (OPEN TRACK SCREEN + PLAY)
         controller.onSongClick(s);
       },
-
       child: Container(
         width: 150.w,
         margin: EdgeInsets.only(left: 12.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
               child: CachedNetworkImage(
@@ -257,15 +258,12 @@ class HomeWidget extends StatelessWidget {
                 ),
               ),
             ),
-
             SizedBox(height: 8.h),
-
             Text(
               s.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-
             Text(
               s.artist,
               maxLines: 1,
