@@ -1,34 +1,47 @@
-🎵 Lofeee – Music Streaming Flutter App
+# 🎵 Lofeee – Music Streaming Flutter App
 
-A modern and responsive music streaming application built using Flutter with MVVM Architecture and GetX State Management.
+A modern and responsive music streaming application built using **Flutter** with **MVVM Architecture** and **GetX State Management**.
 
 Lofeee provides a smooth and fast music streaming experience with beautiful UI, online song streaming, authentication, playlists, favorites, and real-time backend integration using Supabase.
 
-✨ Features
-🎧 Online Music Streaming
-🔍 Smart Song Search
-❤️ Favorite Songs
-📂 Custom Playlists
-👤 User Authentication
-☁️ Supabase Backend Integration
-⚡ Fast & Reactive UI using GetX
-📱 Fully Responsive Design
-🎵 Modern Music Player
-🌙 Clean Dark Theme
-🔄 Real-Time Data Handling
-🧠 MVVM Architecture
-🛠️ Tech Stack
-Technology	Usage
-Flutter	Cross-platform App Development
-Dart	Programming Language
-GetX	State Management & Navigation
-MVVM	Clean Architecture
-Supabase	Backend & Authentication
-JioSaavn API	Music Data API
-ScreenUtil	Responsive UI
-Cached Network Image	Image Optimization
-Just Audio	Audio Playback
-📁 Clean MVVM Project Structure
+---
+
+# ✨ Features
+
+- 🎧 Online Music Streaming
+- 🔍 Smart Song Search
+- ❤️ Favorite Songs
+- 📂 Custom Playlists
+- 👤 User Authentication
+- ☁️ Supabase Backend Integration
+- ⚡ Fast & Reactive UI using GetX
+- 📱 Fully Responsive Design
+- 🎵 Modern Music Player
+- 🌙 Clean Dark Theme
+- 🔄 Real-Time Data Handling
+- 🧠 MVVM Architecture
+
+---
+
+# 🛠️ Tech Stack
+
+| Technology | Usage |
+|---|---|
+| Flutter | Cross-platform App Development |
+| Dart | Programming Language |
+| GetX | State Management & Navigation |
+| MVVM | Clean Architecture |
+| Supabase | Backend & Authentication |
+| JioSaavn API | Music Data API |
+| ScreenUtil | Responsive UI |
+| Cached Network Image | Image Optimization |
+| Just Audio | Audio Playback |
+
+---
+
+# 📁 Clean MVVM Project Structure
+
+```bash
 lib/
 │
 ├── main.dart
@@ -166,191 +179,162 @@ lib/
 │       └── shimmer_widget.dart
 │
 └── assets/
-├── images/
-├── icons/
-├── fonts/
-└── screenshots/
-🏗️ Architecture — MVVM
+    ├── images/
+    ├── icons/
+    ├── fonts/
+    └── screenshots/
+```
 
-The project follows MVVM (Model-View-ViewModel) architecture for scalable and maintainable code.
+---
 
-🔹 Model
+# 🏗️ Architecture — MVVM
 
+The project follows **MVVM (Model-View-ViewModel)** architecture for scalable and maintainable code.
+
+## 🔹 Model
 Handles:
+- API response models
+- JSON serialization/deserialization
+- Data structures
 
-API response models
-JSON serialization/deserialization
-Data structures
-
-Example:
-
-class SongModel {
-final String title;
-final String image;
-final String url;
-
-SongModel({
-required this.title,
-required this.image,
-required this.url,
-});
-
-factory SongModel.fromJson(Map<String, dynamic> json) {
-return SongModel(
-title: json['title'],
-image: json['image'],
-url: json['url'],
-);
-}
-}
-🔹 View
-
+## 🔹 View
 Contains:
+- UI screens
+- Widgets
+- Animations
+- Responsive layouts
 
-UI screens
-Widgets
-Animations
-Responsive layouts
-
-Example:
-
-Obx(() => Icon(
-controller.isPlaying.value
-? Icons.pause
-: Icons.play_arrow,
-))
-🔹 ViewModel (Controller)
-
+## 🔹 ViewModel (Controller)
 Handles:
+- Business logic
+- API calls
+- State management
+- Reactive programming with GetX
 
-Business logic
-API calls
-State management
-Reactive programming with GetX
+---
 
-Example:
-
-class PlayerController extends GetxController {
-RxBool isPlaying = false.obs;
-
-void togglePlay() {
-isPlaying.value = !isPlaying.value;
-}
-}
-⚡ State Management — GetX
+# ⚡ State Management — GetX
 
 GetX is used for:
 
-Reactive State Management
-Route Navigation
-Dependency Injection
-Performance Optimization
+- Reactive State Management
+- Route Navigation
+- Dependency Injection
+- Performance Optimization
 
-Example:
+---
 
-Get.toNamed(AppRoutes.player);
-☁️ Supabase Integration
+# ☁️ Supabase Integration
 
 Supabase is used for:
 
-User Authentication
-Database Storage
-Session Management
-Playlist Storage
-Favorite Songs Storage
+- User Authentication
+- Database Storage
+- Session Management
+- Playlist Storage
+- Favorite Songs Storage
 
-Example:
+---
 
-final supabase = Supabase.instance.client;
-
-await supabase.auth.signInWithPassword(
-email: email,
-password: password,
-);
-🎶 JioSaavn API
+# 🎶 JioSaavn API
 
 Used for fetching:
 
-Trending Songs
-Albums
-Artists
-Search Results
+- Trending Songs
+- Albums
+- Artists
+- Search Results
 
-Example:
+---
 
-final response = await http.get(
-Uri.parse('$baseUrl/search/songs?query=$query'),
-);
-📱 Responsive UI
+# 📱 Responsive UI
 
-The application uses:
+The app uses:
 
-flutter_screenutil
-Adaptive layouts
-Responsive font scaling
+- flutter_screenutil
+- Adaptive layouts
+- Responsive font scaling
 
-Example:
+---
 
-ScreenUtilInit(
-designSize: const Size(360, 690),
-builder: (_, child) => MaterialApp(
-home: child,
-),
-);
-📸 Screenshots
-🏠 Home Screen
-Trending Songs
-Recently Played
-Quick Access Playlists
-🎵 Music Player
-Smooth Audio Controls
-Progress Bar
-Album Artwork
-Background Playback
-🔍 Search Screen
-Smart Search
-Instant Results
-Artist & Album Suggestions
-🖼️ Screenshot Layout
+# 📸 Screenshots
+
+## 🖼️ Screenshot Layout
+
 <p align="center">
-  <img src="assets/screenshots/home.png" width="250"/>
-  <img src="assets/screenshots/player.png" width="250"/>
-  <img src="assets/screenshots/search.png" width="250"/>
+  <img src="assets/screenshots/home.jpeg" width="250"/>
+  <img src="assets/screenshots/player.jpeg" width="250"/>
+  <img src="assets/screenshots/search.jpeg" width="250"/>
 </p>
-⚙️ Installation
-Clone Repository
+
+---
+
+# 📥 Download APK
+
+[Download Lofeee APK](https://drive.google.com/file/d/1h-zTJH4f4wCpCKtYPWF7bxpCtWp4iPuz/view?usp=drivesdk)
+
+---
+
+# ⚙️ Installation
+
+## Clone Repository
+
+```bash
 git clone https://github.com/nitin4568/cute_lofee.git
-Install Dependencies
+```
+
+## Install Dependencies
+
+```bash
 flutter pub get
-Run Project
+```
+
+## Run Project
+
+```bash
 flutter run
-📦 Dependencies
+```
+
+---
+
+# 📦 Dependencies
+
+```yaml
 dependencies:
   flutter:
     sdk: flutter
 
-get:
-supabase_flutter:
-flutter_screenutil:
-cached_network_image:
-http:
-just_audio:
-audio_video_progress_bar:
-get_storage:
-flutter_svg:
-shimmer:
-🌟 Future Improvements
-🎵 Offline Downloads
-📝 Lyrics Support
-🤖 AI Music Recommendations
-🎙️ Podcast Integration
-🎚️ Equalizer Support
-🌐 Multi-language Support
-👨‍💻 Developer
-Nitin Gautam
+  get:
+  supabase_flutter:
+  flutter_screenutil:
+  cached_network_image:
+  http:
+  just_audio:
+  audio_video_progress_bar:
+  get_storage:
+  flutter_svg:
+  shimmer:
+```
+
+---
+
+# 🌟 Future Improvements
+
+- 🎵 Offline Downloads
+- 📝 Lyrics Support
+- 🤖 AI Music Recommendations
+- 🎙️ Podcast Integration
+- 🎚️ Equalizer Support
+- 🌐 Multi-language Support
+
+---
+
+# 👨‍💻 Developer
+
+## Nitin Gautam
 
 Flutter Developer • GetX • Supabase • MVVM Architecture
 
-🔗 GitHub Repository
+### 🔗 GitHub Repository
 
-fix
+https://github.com/nitin4568/cute_lofee.git
